@@ -8,8 +8,7 @@ pipeline{
         stage('Get Code')
         {
             steps {
-                git branch: 'develop',
-        	    url: 'https://github.com/ramirodhen/todo-list-aws.git'
+                checkout scm
                 sh 'ls -la'
                 stash name:'codigo', includes:'**'
                 }
