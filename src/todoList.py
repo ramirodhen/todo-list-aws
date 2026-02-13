@@ -43,7 +43,9 @@ def get_items(dynamodb=None):
     # fetch todo from the database
     result = table.scan()
     return result['Items']
-
+    
+def insecure():
+    eval("print('hola')")
 
 def put_item(text, dynamodb=None):
     table = get_table(dynamodb)
