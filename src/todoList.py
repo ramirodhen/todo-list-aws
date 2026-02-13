@@ -6,7 +6,7 @@ import json
 import functools
 from botocore.exceptions import ClientError
 
-x=1
+
 def get_table(dynamodb=None):
     if not dynamodb:
         URL = os.environ['ENDPOINT_OVERRIDE']
@@ -43,9 +43,7 @@ def get_items(dynamodb=None):
     # fetch todo from the database
     result = table.scan()
     return result['Items']
-    
-def insecure():
-    eval("print('hola')")
+
 
 def put_item(text, dynamodb=None):
     table = get_table(dynamodb)
