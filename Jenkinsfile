@@ -18,9 +18,10 @@ pipeline{
         steps {
             unstash 'codigo'
             sh '''
+            rm -f flake8.out bandit.sarif
             flake8 --format=pylint --exit-zero src > flake8.out
-            bandit -r src -f sarif -o bandit.sarif || true
-            '''
+            /usr/bin/bandit -r src -f sarif -o bandit.sarif || true
+             '''
             catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
             script {
                 recordIssues(
