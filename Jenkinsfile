@@ -69,6 +69,19 @@ pipeline{
             junit allowEmptyResults: true, testResults: 'result-int.xml'
           }
         }
+        stage('Promote') {
+          steps {
+            unstash 'codigo'
+            sh '''
+              set -e
+              git fetch origin
+              git checkout -B master origin/master
+              git config merge.ours.driver true
+              git merge origin/develop --no-edit
+              git push origin master
+            '''
+          }
+        }        
       }
     }
         
