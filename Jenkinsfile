@@ -18,9 +18,10 @@ pipeline{
             unstash 'codigo'
             sh '''
               rm -f flake8.out bandit.out
-              python3 -m flake8 --exit-zero --format=pylint src > flake8.out
+              python3 -m flake8 --exit-zero --format=pylint src > flake8.out || true
               python3 -m bandit -r src -f custom -o bandit.out -ll \
                 --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
+              touch bandit.out
             '''
             recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')]
             recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')]
