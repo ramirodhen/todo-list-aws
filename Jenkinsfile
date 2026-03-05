@@ -14,24 +14,17 @@ pipeline{
                 }
         }
         stage('Static Test') {
-        steps {
+          steps {
             unstash 'codigo'
             sh '''
-            rm -f flake8.out bandit.sarif
-            flake8 --format=pylint --exit-zero src > flake8.out
-            /usr/bin/bandit -r src -f sarif -o bandit.sarif || true
-             '''
-            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-            script {
-                recordIssues(
-                    tools: [
-                        flake8(name: 'Flake8', pattern: 'flake8.out'),
-                        sarif(pattern: 'bandit.sarif')
-                    ]
-                )
-            }
-            }
-        }
+              rm -f flake8.out bandit.out
+              python3 -m flake8 --exit-zero --format=pylint src > flake8.out
+              python3 -m bandit -r src -f custom -o bandit.out -ll \
+                --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
+            '''
+            recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')]
+            recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')]
+          }
         }
         stage('Deploy') {
           steps {
