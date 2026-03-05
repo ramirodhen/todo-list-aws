@@ -1,41 +1,13 @@
 version = 0.1
-[default]
-[default.deploy]
+
 [default.deploy.parameters]
-stack_name = "stagint-todo-list-aws"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-bistlm1u1s4d"
-s3_prefix = "stagint-todo-list-aws"
+stack_name = "staging-todolist-aws"
+resolve_s3 = true
+s3_prefix = "staging-todolist-aws"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "Stage=\"staging\""
 image_repositories = []
-resolve_s3 = false
-confirm_changeset = true
-
 
 [default.global.parameters]
 region = "us-east-1"
-[staging]
-[staging.deploy]
-[staging.deploy.parameters]
-stack_name = "stagint-todo-list-awd"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-bistlm1u1s4d"
-s3_prefix = "stagint-todo-list-awd"
-capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Stage=\"staging\""
-image_repositories = []
-resolve_s3 = false
-confirm_changeset = true
-
-
-[staging.global.parameters]
-region = "us-east-1"
-[production]
-[production.deploy]
-[production.deploy.parameters]
-stack_name = "todo-list-aws-production"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-bistlm1u1s4d"
-s3_prefix = "todo-list-aws"
-region = "us-east-1"
-capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Stage=\"production\""
-image_repositories = []
