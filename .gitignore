@@ -5,3 +5,16 @@ tests
 pyenvunittests
 .coverage
 coverage.xml
+.aws-sam/
+samconfig.toml
+env.sh
+result-int.xml
+flake8.out
+bandit.out
+.pytest_cache/
+__pycache__/
+--lookup-attributes
+--max-results
+--output
+--region
+not exist*
