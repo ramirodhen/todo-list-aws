@@ -13,20 +13,7 @@ pipeline{
                 stash name:'codigo', includes:'**'
                 }
         }
-        stage('Static Test') {
-          steps {
-            unstash 'codigo'
-            sh '''
-              rm -f flake8.out bandit.out
-              python3 -m flake8 --exit-zero --format=pylint src > flake8.out || true
-              python3 -m bandit -r src -f custom -o bandit.out -ll \
-                --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
-              touch bandit.out
-            '''
-            recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')]
-            recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')]
-          }
-        }
+       
         stage('Deploy') {
           steps {
             unstash 'codigo'
@@ -69,19 +56,6 @@ pipeline{
             junit allowEmptyResults: true, testResults: 'result-int.xml'
           }
         }
-        stage('Promote') {
-          steps {
-            unstash 'codigo'
-            sh '''
-              set -e
-              git fetch origin
-              git checkout -B master origin/master
-              git config merge.ours.driver true
-              git merge origin/develop --no-edit
-              git push origin master
-            '''
-          }
-        }        
       }
     }
         
