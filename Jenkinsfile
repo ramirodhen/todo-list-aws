@@ -30,22 +30,13 @@ pipeline{
           steps {
             unstash 'codigo'
             sh '''
-              set -e
-        
               sam build
               sam validate
         
-              sam deploy \
-                --resolve-s3 \
-                --stack-name "todo-list-aws-staging" \
-                --region "us-east-1" \
-                --capabilities CAPABILITY_IAM \
-                --no-confirm-changeset \
-                --no-fail-on-empty-changeset \
-                --parameter-overrides Stage=staging
+              sam deploy --config-env default --no-confirm-changeset --no-fail-on-empty-changeset
         
               BASE_URL=$(aws cloudformation describe-stacks \
-                --stack-name todo-list-aws-staging \
+                --stack-name stagint-todo-list-aws \
                 --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                 --output text)
         
