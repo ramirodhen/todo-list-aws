@@ -13,7 +13,6 @@ pipeline{
                 stash name:'codigo', includes:'**'
                 }
         }
-       
         stage('Deploy') {
           steps {
             unstash 'codigo'
@@ -24,13 +23,13 @@ pipeline{
               sam validate
         
               sam deploy \
-                --config-env default \
+                --config-env production \
                 --region us-east-1 \
                 --no-confirm-changeset \
                 --no-fail-on-empty-changeset
         
               BASE_URL=$(aws cloudformation describe-stacks \
-                --stack-name staging-todolist-aws \
+                --stack-name production-todolist-aws \
                 --query 'Stacks[0].Outputs[?OutputKey==`BaseUrlApi`].OutputValue' \
                 --output text \
                 --region us-east-1)
@@ -43,18 +42,21 @@ pipeline{
           }
         }
         stage('Rest Test') {
-          steps {
+           steps {
             unstash 'codigo'
             unstash 'env'
             sh '''
               set -e
               . ./env.sh
-              echo "Probando contra: $BASE_URL"
-        
-              python3 -m pytest --junit-xml=result-int.xml test/integration/todoApiTest.py
+              python3 -m pytest -m readonly --junit-xml=result-int.xml test/integration/todoApiTest.py
             '''
-            junit allowEmptyResults: true, testResults: 'result-int.xml'
-          }
+            junit allowEmptyResults: false, testResults:'result-int.xml'
+            script {
+              if (currentBuild.result == 'UNSTABLE') {
+                error("Rest tests fallaron. Abortando build del pipeline.")
+              }
+            }
+          } 
         }
       }
     }

@@ -9,5 +9,14 @@ capabilities = "CAPABILITY_IAM"
 parameter_overrides = "Stage=\"staging\""
 image_repositories = []
 
+[production.deploy.parameters]
+stack_name = "production-todolist-aws"
+resolve_s3 = true
+s3_prefix = "production-todolist-aws"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Stage=\"production\""
+image_repositories = []
+
 [default.global.parameters]
 region = "us-east-1"
