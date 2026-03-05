@@ -55,6 +55,20 @@ pipeline{
             stash name: 'env', includes: 'env.sh'
           }
         }
+        stage('Rest Test') {
+          steps {
+            unstash 'codigo'
+            unstash 'env'
+            sh '''
+              set -e
+              . ./env.sh
+              echo "Probando contra: $BASE_URL"
+        
+              python3 -m pytest --junit-xml=result-int.xml test/integration/todoApiTest.py
+            '''
+            junit allowEmptyResults: true, testResults: 'result-int.xml'
+          }
         }
-        }
+      }
+    }
         
