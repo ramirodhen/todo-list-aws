@@ -23,7 +23,7 @@ s3_prefix = "stagint-todo-list-awd"
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "Stage=\"staging\""
 image_repositories = []
-resolve_s3 = true
+resolve_s3 = false
 confirm_changeset = true
 
 
