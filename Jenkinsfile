@@ -60,13 +60,17 @@ pipeline{
             unstash 'codigo'
             unstash 'env'
             sh '''
-              set -e
               . ./env.sh
               echo "Probando contra: $BASE_URL"
         
-              python3 -m pytest -m "not readonly" --junit-xml=result-int.xml test/integration/todoApiTest.py
+              python3 -m pytest -m "not readonly" --junit-xml=result-int.xml test/integration/todoApiTest.py || true
             '''
             junit allowEmptyResults: true, testResults: 'result-int.xml'
+        
+            script {
+              if (currentBuild.result == 'UNSTABLE')
+                error("Tests fallidos")
+            }
           }
         }
         stage('Promote') {
