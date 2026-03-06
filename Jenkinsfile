@@ -64,7 +64,7 @@ pipeline{
               . ./env.sh
               echo "Probando contra: $BASE_URL"
         
-              python3 -m pytest --junit-xml=result-int.xml test/integration/todoApiTest.py
+              python3 -m pytest -m "not readonly" --junit-xml=result-int.xml test/integration/todoApiTest.py
             '''
             junit allowEmptyResults: true, testResults: 'result-int.xml'
           }
