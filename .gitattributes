@@ -1,2 +1,3 @@
 Jenkinsfile merge=ours
 .gitattributes merge=ours
+Jenkinsfile_agentes merge=ours
