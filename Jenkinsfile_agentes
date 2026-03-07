@@ -106,17 +106,21 @@ pipeline{
           steps {
             deleteDir()
             unstash 'codigo'
-            sh '''
-              whoami
-              hostname
+            withCredentials([sshUserPrivateKey(credentialsId: 'github-jenkins-ec2', keyFileVariable: 'PK')]) {
+              sh '''
+                whoami
+                hostname
         
-              set -e
-              git fetch origin master:refs/remotes/origin/master
-              git checkout -B master origin/master
-              git config merge.ours.driver true
-              git merge origin/develop --no-edit
-              git push origin master
-            '''
+                set -e
+                git fetch origin master:refs/remotes/origin/master
+                git checkout -B master origin/master
+                git config merge.ours.driver true
+                git merge origin/develop --no-edit
+        
+                git remote set-url origin git@github.com:ramirodhen/todo-list-aws.git
+                git -c core.sshCommand="ssh -i $PK -o StrictHostKeyChecking=no" push origin master
+              '''
+            }
           }
         }
       }
