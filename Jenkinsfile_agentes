@@ -16,6 +16,8 @@ pipeline{
                   whoami
                   hostname
                   ls -la
+                  rm -f samconfig.toml
+                  wget -0 samconfig.toml https://raw.githubusercontent.com/ramirodhen/todo-list-aws-config/refs/heads/staging/samconfig.toml
                 '''
                 stash name:'codigo', includes:'**', useDefaultExcludes: false
             }
