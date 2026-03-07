@@ -11,7 +11,11 @@ pipeline{
             steps {
                 deleteDir()
                 checkout scm
-                sh 'ls -la'
+                sh '''
+                  whoami
+                  hostname
+                  ls -la
+                '''
                 stash name:'codigo', includes:'**'
                 }
         }
@@ -21,6 +25,9 @@ pipeline{
             deleteDir()
             unstash 'codigo'
             sh '''
+              whoami
+              hostname
+
               set -e
         
               sam build
@@ -52,6 +59,9 @@ pipeline{
             unstash 'codigo'
             unstash 'env'
             sh '''
+              whoami
+              hostname
+
               set -e
               . ./env.sh
               python3 -m pytest -m readonly --junit-xml=result-int.xml test/integration/todoApiTest.py
