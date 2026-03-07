@@ -12,7 +12,11 @@ pipeline{
             steps {
                 deleteDir()
                 checkout scm
-                sh 'ls -la'
+                sh '''
+                  whoami
+                  hostname
+                  ls -la
+                '''
                 stash name:'codigo', includes:'**', useDefaultExcludes: false
             }
         }
@@ -23,6 +27,9 @@ pipeline{
             deleteDir()
             unstash 'codigo'
             sh '''
+              whoami
+              hostname
+
               rm -f flake8.out bandit.out
               python3 -m flake8 --exit-zero --format=pylint src > flake8.out || true
               python3 -m bandit -r src -f custom -o bandit.out -ll \
@@ -40,6 +47,9 @@ pipeline{
             deleteDir()
             unstash 'codigo'
             sh '''
+              whoami
+              hostname
+
               set -e
 
               sam build
@@ -72,6 +82,9 @@ pipeline{
             unstash 'codigo'
             unstash 'env'
             sh '''
+              whoami
+              hostname
+
               . ./env.sh
               echo "Probando contra: $BASE_URL"
 
@@ -92,6 +105,9 @@ pipeline{
             deleteDir()
             unstash 'codigo'
             sh '''
+              whoami
+              hostname
+
               set -e
               git fetch origin
               git checkout -B master origin/master
